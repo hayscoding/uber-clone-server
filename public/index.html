@@ -16,7 +16,9 @@
         function getToken(callback) {
             var container = document.createElement('div');
             container.id = 'captcha';
+
             document.body.appendChild(container);
+
             var captcha = new firebase.auth.RecaptchaVerifier('captcha', {
                 'size': 'normal',
                 'callback': function(token) {
@@ -26,17 +28,23 @@
                     callback('');
                 }
             });
+
             captcha.render().then(function() {
                 captcha.verify();
             });
         }
 
         function sendTokenToApp(token) {
+            console.log('sending token to app...')
             var baseUri = decodeURIComponent(location.search.replace(/^\?appurl\=/, ''));
             location.href = baseUri + '/?token=' + encodeURIComponent(token);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // getToken((token) => { 
+            //     // alert('got Token: ', token)
+            //     console.log('got Token: ', token) 
+            // });
             getToken(sendTokenToApp);
         });
 
